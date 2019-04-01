@@ -1,5 +1,5 @@
 """
-Takes in a single csv file of a city with the header of
+Takes in a single csv file of a state with the header of
 '1    2    3       4       5     6     7         8       9         10  11'
 'LON, LAT, NUMBER, STREET, UNIT, CITY, DISTRICT, REGION, POSTCODE, ID, HASH'
 
@@ -12,19 +12,22 @@ EXAMPLE  5516,   Co Rd 27, Fort Payne, AL,    35968,    6134
 
 import pandas as pd
 import numpy as np
-import os.path
 
 
 def format_csv(inpath, outpath='Output\\'):
     """
-    Given the filepath to a csv file for a cities addresses will output a new
+    Given the filepath to a csv file for statewide addresses will output a new
     csv file with the relevant information formatted
 
     Inpath: file path to a csv file
     Outpath: file path to the output dir
+
+    return 0: everything good
+           1: Empty dataframe, reccomend calling file search individual cities
+              files
     """
     state = parsestate(inpath)
-    cityname = parsecity(inpath)
+    searchcities = 0
     goodcols = ['NUMBER', 'STREET', 'CITY', 'POSTCODE', 'UNIT']
     data = pd.read_csv(inpath, dtype=str, usecols=goodcols)
 
@@ -32,27 +35,23 @@ def format_csv(inpath, outpath='Output\\'):
     # reorder dataframe
     newdata = data[goodcols]
     # remove rows that are missing non-optional data
-    newdata = newdata.dropna(subset=['STREET', 'POSTCODE'])
+    newdata = newdata.dropna(subset=['STREET', 'CITY', 'POSTCODE'])
     # insert new STATE column
     newdata.insert(3, 'STATE', state)
-    # fill empty CITY column values
-    newdata = newdata.fillna({'CITY': cityname})
-    # check if dataframe is empty - can't clean empty data
+    # check if dataframe is empty - no good data in state file
     if newdata.empty:
         print(state + " is empty, consider searching cities")
+        searchcities = -1
     else:
         # clean data in NUMBER and UNIT column
         newdata['UNIT'] = newdata['UNIT'].where(newdata['UNIT'].str.isdigit())
         newdata['NUMBER'] = newdata['NUMBER'].where(
             newdata['NUMBER'].str.isdigit())
+
     filename = outpath + state + '.csv'
-    if os.path.isfile(filename):
-        newdata.to_csv(filename, index=False, mode='a', header=False)
-        print("File appended to: " + filename)
-    else:
-        newdata.to_csv(filename, index=False)
-        print("File printed to: " + filename)
-    return
+    print("File printed to: " + filename)
+    newdata.to_csv(filename, index=False)
+    return searchcities
 
 
 def parsestate(path):
@@ -60,19 +59,3 @@ def parsestate(path):
     returns the state from the given file path
     """
     return path.split('\\')[3].upper()
-
-
-def parsecity(path):
-    """
-    returns the city name from the given file path
-    """
-    city = path.split('\\')[4]
-    # remove file type
-    city = city[:-4]
-    # remove possible prefix
-    cityprefix = 'city_of_'
-    if (city.startswith(cityprefix)):
-        city = city[len(cityprefix):]
-    # remove underscores and capitalize city name
-    city = city.replace('_', ' ').title()
-    return city
