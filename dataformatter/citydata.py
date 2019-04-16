@@ -39,7 +39,7 @@ def format_csv(inpath, outpath='Output\\'):
     newdata = newdata.fillna({'CITY': cityname})
     # check if dataframe is empty - can't clean empty data
     if newdata.empty:
-        print(state + " is empty, consider searching cities")
+        print(cityname + " is empty...")
     else:
         # clean data in NUMBER and UNIT column
         newdata['UNIT'] = newdata['UNIT'].where(newdata['UNIT'].str.isdigit())
