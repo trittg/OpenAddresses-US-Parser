@@ -20,8 +20,11 @@ def format_csv(inpath, outpath, num):
         # only take the characters before the 4 digit routing number
         elif len(zipcode) > 5:
             zipcode = zipcode[:-4]
+        # get rid of '0' value zipcodes, have not found what causes this
+        if zipcode == '0':
+            zipcode = np.nan
         sample['POSTCODE'][i] = zipcode
-
+    sample.dropna(subset=['POSTCODE'], inplace=True)
     del sample['index']
     sample.to_csv(outpath, index=False)
     return
