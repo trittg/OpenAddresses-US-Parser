@@ -7,6 +7,7 @@ def format_csv(inpath, outpath, num):
     sample = data.sample(n=num, random_state=1)
     sample.reset_index(inplace=True)
 
+    # format zipcode
     for i in range(len(sample['POSTCODE'])):
         zipcode = str(sample['POSTCODE'][i])
         # case zipcode contains - character, then select all earlier chracters
@@ -24,7 +25,33 @@ def format_csv(inpath, outpath, num):
         if zipcode == '0':
             zipcode = np.nan
         sample['POSTCODE'][i] = zipcode
+
+
+    # format Street
+    for i in range(len(sample['STREET'])):
+        street = str(sample['STREET'][i])
+        # case street contains ',' character, then select all earlier chracters
+        # sometimes the street field will contain "street, city, postcode"
+        commapos = street.find(',')
+        if commapos != -1:
+            #print("BAD DATA:\t"+street)
+            sample['STREET'][i] = np.nan
+            #print(sample['STREET'][i])
+
+    # format City
+    for i in range(len(sample['CITY'])):
+        city = str(sample['CITY'][i])
+        # case city contains ',' character, then select all earlier chracters
+        # sometimes the city field will contain "city, extra info"
+        commapos = city.find(',')
+        if commapos != -1:
+            sample['CITY'][i] = np.nan
+
     sample.dropna(subset=['POSTCODE'], inplace=True)
+    sample.dropna(subset=['STREET'], inplace=True)
+    sample.dropna(subset=['CITY'], inplace=True)
+
+
     del sample['index']
     sample.to_csv(outpath, index=False)
     return
