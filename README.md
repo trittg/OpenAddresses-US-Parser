@@ -1,5 +1,5 @@
 # OpenAddresses-US-Parser
-Python program to format USA state addresses from USA region datasets taken from openaddress.io. Where the dataset from openaddress.io is split up between either state or city files this program combs through the statewide files (if present).  If no usuable data is found in the stae file then it will then search through each city file.  The end result is a csv file for each of the 50 states with the following header. 
+Python program to format USA state addresses from USA region datasets taken from openaddress.io. Where the dataset from openaddress.io is split up between either state or city files this program combs through the statewide files (if present).  If no useable data is found in the state file, then it will then search through each city file.  The result is a csv file for each of the 50 states with the following header.  
 ```
     'NUMBER', 'STREET', 'CITY', 'POSTCODE', 'UNIT'
 ```
@@ -34,5 +34,5 @@ ex.) .\\Input\\openaddr-collected-us_midwest\\...
 
 ## Running the Program
 
-To use this tool make sure you have downloaded the region data and placed it in the Input folder.  Run the main.py file to compile all state address data in the Output folder.  Run the sample.py file to select x sample addresses from each state, apply the final filter and out put the remaining valid data entries in the sample folder.  By default the sample.py takes a sample of 1000 addresses from each state csv file.
+To use this tool, make sure you have downloaded the region data and placed it in the Input folder.  Run the main.py file to compile all state address data in the Output folder.  Run the sample.py file to select x sample addresses from each state, apply the final filter and out put the remaining valid data entries in the sample folder.  By default, the sample.py takes a sample of 1000 addresses from each state csv file.
 
