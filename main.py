@@ -1,17 +1,15 @@
+"""
+Cycles through each folder in the Input folder and applies city or state data
+formmating toindividual files.  First filters the state files, however if no 
+good data is found it will loop over all city files.
+
+Outputs a CSV file for each state filtered address data in the output folder
+"""
 from dataformatter import citydata, statedata
 import os
 
-testcityfile = r'Input\openaddr-collected-us_midwest\us\ia\benton.csv'
-teststatefile = r'Input\openaddr-collected-us_northeast\us\ny\statewide.csv'
-
-# citydata.format_csv(testcityfile)
-# statedata.format_csv(teststatefile)
-
 inDir = 'Input\\'
-
-
 regions = os.listdir(inDir)
-#regions = ['openaddr-collected-us_northeast']
 for r in regions:
     rpath = inDir + r + '\\us'
     states = os.listdir(rpath)

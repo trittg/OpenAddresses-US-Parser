@@ -1,3 +1,8 @@
+"""
+Takes in a CSV file with the header:
+    NUMBER, STREET, CITY, STATE, POSTCODE, UNIT
+Fixes zipcode entries and removes entries with invalid data for CITY and STREET
+"""
 import pandas as pd
 import numpy as np
 
